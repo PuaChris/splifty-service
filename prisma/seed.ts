@@ -24,7 +24,7 @@ async function main() {
         settled: false,
       }
     })
-    const seededExpenses = await Promise.all(
+    await Promise.all(
       seededUsers.map(async (user, i) => {
         console.log(user)
         const arg = {
@@ -44,8 +44,6 @@ async function main() {
         return await prisma.expense.create(arg)
       })
     )
-
-
   } catch (err) {
     console.error(err)
   }

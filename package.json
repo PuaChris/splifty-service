@@ -1,5 +1,5 @@
 {
-  "name": "back-end",
+  "name": "splifty-service",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,24 +11,25 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "lint": "eslint --ext .ts .",
-    "format": "prettier --config .prettierrc.json 'src/**/*.ts' --write",
+    "lint": "eslint",
+    "format": "prettier --config .prettierrc.json src/**/*.ts --write",
     "studio": "yarn prisma studio",
     "migrate": "yarn prisma migrate dev && yarn prisma generate && yarn seed",
     "reset": "yarn prisma migrate reset",
     "seed": "yarn prisma db seed",
     "deploy": "yarn prisma migrate deploy",
-    "prepare": "npx prisma generate && tsc"
+    "prepare": "husky"
   },
   "dependencies": {
-    "@prisma/client": "^5.21.1",
+    "@prisma/client": "^5.22.0",
     "dotenv": "^16.4.1",
     "express": "^4.21.1",
     "pg": "^8.13.1",
-    "prisma": "^5.21.1",
+    "prisma": "^5.22.0",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.14.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.8.7",
     "@typescript-eslint/eslint-plugin": "^8.12.2",
@@ -36,11 +37,20 @@
     "concurrently": "^9.0.1",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.12.0",
+    "husky": "^9.1.6",
     "nodemon": "^3.1.7",
     "prettier": "3.3.3",
+    "pretty-quick": "^4.0.0",
     "ts-node": "10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PuaChris/splifty-service.git",
+    "directory": "prisma"
   },
   "bundledDependencies": [
     "@prisma/client"
