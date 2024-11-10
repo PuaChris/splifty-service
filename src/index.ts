@@ -12,7 +12,11 @@ async function main() {
   const app: Express = express()
   const port = process.env.PORT || 8080
 
-  app.use('/expenses', expenseRoutes)
+  // Express middleware
+  app.use(express.json()) // parses incoming JSON from request bodies
+  app.use(express.urlencoded()) // parses urlencoded bodies
+
+  app.use('/v1/expenses', expenseRoutes)
 
   app.get('/', () => {})
 
