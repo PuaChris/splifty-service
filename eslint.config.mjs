@@ -39,6 +39,7 @@ export default [
       curly: 'error',
       'no-unneeded-ternary': 'error',
       'one-var-declaration-per-line': 'error',
+      '@typescript-eslint/no-empty-object-type': 'off',
 
       quotes: [
         'error',
