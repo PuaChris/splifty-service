@@ -27,28 +27,39 @@ const expenseSelect: Prisma.ExpenseSelect = {
 }
 
 routes.get('/', async (req: Request, res: Response) => {
-  const expenses = await prisma.expense.findMany({
-    select: expenseSelect,
-  })
+  try {
+    console.log('Fetching expenses...')
+    const expenses = await prisma.expense.findMany({
+      select: expenseSelect,
+    })
 
-  console.log(expenses)
+    console.log('Successfully fetched expenses.')
 
-  res.send({ data: expenses })
+    res.send({ data: expenses })
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(400)
+  }
 })
 
 routes.get('/:expenseId', async (req: Request, res: Response) => {
   const { expenseId } = req.params
+  try {
+    console.log('Fetching expense...')
 
-  const expense = await prisma.expense.findUnique({
-    where: {
-      id: expenseId,
-    },
-    select: expenseSelect,
-  })
+    const expense = await prisma.expense.findUnique({
+      where: {
+        id: expenseId,
+      },
+      select: expenseSelect,
+    })
+    console.log('Successfully fetched expense.')
 
-  console.log(expense)
-
-  res.send({ data: expense })
+    res.send({ data: expense })
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(400)
+  }
 })
 
 routes.put('/:expenseId', async (req: Request, res: Response) => {
@@ -87,6 +98,27 @@ routes.post('/', async (req: Request, res: Response) => {
 
     await prisma.expense.create(expenseCreateArgs)
     console.log('Successfully created expense.')
+
+    res.sendStatus(200)
+  } catch (err) {
+    console.error(err)
+    res.sendStatus(400)
+  }
+})
+
+routes.delete('/:expenseId', async (req: Request, res: Response) => {
+  const { expenseId } = req.params
+
+  try {
+    console.log('Deleting expense...')
+
+    await prisma.expense.delete({
+      where: {
+        id: expenseId,
+      },
+    })
+
+    console.log('Successfully deleted expense.')
 
     res.sendStatus(200)
   } catch (err) {

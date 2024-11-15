@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express'
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 import expenseRoutes from '@routes/expenses-routes'
 import { prisma } from 'prisma'
@@ -15,6 +16,20 @@ async function main() {
   // Express middleware
   app.use(express.json()) // parses incoming JSON from request bodies
   app.use(express.urlencoded()) // parses urlencoded bodies
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: [
+        'Access-Control-Allow-Headers',
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+      ],
+      maxAge: 600,
+    })
+  )
 
   app.use('/v1/expenses', expenseRoutes)
 
