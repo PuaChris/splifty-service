@@ -1,6 +1,6 @@
 import { Expense } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
-import { ExpenseBody } from 'lib/types/expenses-types'
+import { ExpenseBody } from 'lib/types/expense-types'
 
 export function getExpenseArgs(expense: ExpenseBody) {
   const expenseArgs: Expense = {

@@ -1,6 +1,6 @@
 import { SplitMethod } from '@prisma/client'
-import { PARTY_SCHEMA } from './partys-types'
-import { USER_SCHEMA } from './users-types'
+import { PARTY_SCHEMA } from './party-types'
+import { USER_SCHEMA } from './user-types'
 import { z } from 'zod'
 
 export const EXPENSE_SCHEMA = z.object({

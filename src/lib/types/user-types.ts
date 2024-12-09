@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { GroupBody } from './groups-types'
+import { GroupBody } from './group-types'
 
 export const USER_SCHEMA = z.object({
   id: z.string(),

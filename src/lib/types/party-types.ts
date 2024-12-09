@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { USER_SCHEMA } from './users-types'
+import { USER_SCHEMA } from './user-types'
 
 export const PARTY_SCHEMA = z.object({
   id: z.string(),

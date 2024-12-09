@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 
-import expenseRoutes from '@routes/expenses-routes'
+import expenseRoutes from '@routes/expense-routes'
 import { prisma } from 'prisma'
 
 dotenv.config()

@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 import express, { Request, Response, Router } from 'express'
-import { ExpenseBody } from 'lib/types/expenses-types'
-import { getExpenseArgs } from 'lib/utils/expenses-utils'
+import { ExpenseBody } from 'lib/types/expense-types'
+import { getExpenseArgs } from 'lib/utils/expense-utils'
 import { prisma } from 'prisma'
 
 const routes: Router = express()
