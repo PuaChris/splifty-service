@@ -1,41 +1,39 @@
 import { Prisma } from '@prisma/client'
 import express, { Request, Response, Router } from 'express'
+import { EXPENSE_SELECT } from 'lib/constants/expense-select'
 import { ExpenseBody } from 'lib/types/expense-types'
+import { PartyBody } from 'lib/types/party-types'
 import { getExpenseArgs } from 'lib/utils/expense-utils'
 import { prisma } from 'prisma'
 
 const routes: Router = express()
-const expenseSelect: Prisma.ExpenseSelect = {
-  id: true,
-  title: true,
-  date: true,
-  cost: true,
-  type: true,
-  status: true,
-  splitMethod: true,
-
-  owner: true,
-  parties: {
-    select: {
-      id: true,
-      user: true,
-      percent: true,
-      amountOwed: true,
-      settled: true,
-    },
-  },
-}
 
 routes.get('/', async (req: Request, res: Response) => {
   try {
     console.log('Fetching expenses...')
     const expenses = await prisma.expense.findMany({
-      select: expenseSelect,
+      select: EXPENSE_SELECT,
+    })
+
+    const data: ExpenseBody[] = expenses.map((exp) => {
+      const parties: PartyBody[] = exp.parties.map((party) => {
+        return {
+          ...party,
+          percent: party.percent.toNumber(),
+          amountOwed: party.amountOwed.toNumber(),
+        }
+      })
+
+      return {
+        ...exp,
+        cost: exp.cost.toNumber(),
+        parties,
+      }
     })
 
     console.log('Successfully fetched expenses.')
 
-    res.send({ data: expenses })
+    res.send({ data })
   } catch (err) {
     console.error(err)
     res.sendStatus(400)
@@ -51,11 +49,30 @@ routes.get('/:expenseId', async (req: Request, res: Response) => {
       where: {
         id: expenseId,
       },
-      select: expenseSelect,
+      select: EXPENSE_SELECT,
     })
-    console.log('Successfully fetched expense.')
 
-    res.send({ data: expense })
+    if (expense) {
+      const parties: PartyBody[] = expense.parties.map((party) => {
+        return {
+          ...party,
+          percent: party.percent.toNumber(),
+          amountOwed: party.amountOwed.toNumber(),
+        }
+      })
+
+      const data: ExpenseBody = {
+        ...expense,
+        cost: expense.cost.toNumber(),
+        parties,
+      }
+
+      console.log('Successfully fetched expense.')
+
+      res.send({ data })
+    } else {
+      res.sendStatus(404)
+    }
   } catch (err) {
     console.error(err)
     res.sendStatus(400)

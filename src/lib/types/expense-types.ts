@@ -8,7 +8,7 @@ export const EXPENSE_SCHEMA = z.object({
   title: z.string(),
   date: z.date(), // Assuming you handle the default value on the Prisma side
   cost: z.number(), // In Zod, you would handle Decimal as a number or string, depending on your Decimal library usage
-  type: z.string().optional(),
+  type: z.string().nullable(),
   status: z.string().nullable(),
   splitMethod: z.nativeEnum(SplitMethod),
   owner: USER_SCHEMA,
