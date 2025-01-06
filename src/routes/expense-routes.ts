@@ -1,37 +1,12 @@
-import { Prisma } from '@prisma/client'
 import express, { Request, Response, Router } from 'express'
-import { EXPENSE_SELECT } from 'lib/constants/expense-select'
+import { expenseController } from 'lib/database/expense-db'
 import { ExpenseBody } from 'lib/types/expense-types'
-import { PartyBody } from 'lib/types/party-types'
-import { getExpenseArgs } from 'lib/utils/expense-utils'
-import { prisma } from 'prisma'
 
 const routes: Router = express()
 
 routes.get('/', async (req: Request, res: Response) => {
   try {
-    console.log('Fetching expenses...')
-    const expenses = await prisma.expense.findMany({
-      select: EXPENSE_SELECT,
-    })
-
-    const data: ExpenseBody[] = expenses.map((exp) => {
-      const parties: PartyBody[] = exp.parties.map((party) => {
-        return {
-          ...party,
-          percent: party.percent.toNumber(),
-          amountOwed: party.amountOwed.toNumber(),
-        }
-      })
-
-      return {
-        ...exp,
-        cost: exp.cost.toNumber(),
-        parties,
-      }
-    })
-
-    console.log('Successfully fetched expenses.')
+    const data = await expenseController.fetchMany()
 
     res.send({ data })
   } catch (err) {
@@ -43,32 +18,8 @@ routes.get('/', async (req: Request, res: Response) => {
 routes.get('/:expenseId', async (req: Request, res: Response) => {
   const { expenseId } = req.params
   try {
-    console.log('Fetching expense...')
-
-    const expense = await prisma.expense.findUnique({
-      where: {
-        id: expenseId,
-      },
-      select: EXPENSE_SELECT,
-    })
-
-    if (expense) {
-      const parties: PartyBody[] = expense.parties.map((party) => {
-        return {
-          ...party,
-          percent: party.percent.toNumber(),
-          amountOwed: party.amountOwed.toNumber(),
-        }
-      })
-
-      const data: ExpenseBody = {
-        ...expense,
-        cost: expense.cost.toNumber(),
-        parties,
-      }
-
-      console.log('Successfully fetched expense.')
-
+    const data = await expenseController.fetchOne(expenseId)
+    if (data) {
       res.send({ data })
     } else {
       res.sendStatus(404)
@@ -79,22 +30,11 @@ routes.get('/:expenseId', async (req: Request, res: Response) => {
   }
 })
 
-routes.put('/:expenseId', async (req: Request, res: Response) => {
-  const { expenseId } = req.params
+routes.post('/', async (req: Request, res: Response) => {
   const expenseBody: ExpenseBody = req.body
-  const args = getExpenseArgs(expenseBody)
+
   try {
-    console.log('Updating expense...')
-    const expenseUpdateArgs: Prisma.ExpenseUpdateArgs = {
-      where: {
-        id: expenseId,
-      },
-      data: args,
-    }
-
-    await prisma.expense.update(expenseUpdateArgs)
-
-    console.log('Successfully updated expense.')
+    await expenseController.createOne(expenseBody)
     res.sendStatus(200)
   } catch (err) {
     console.error(err)
@@ -102,20 +42,12 @@ routes.put('/:expenseId', async (req: Request, res: Response) => {
   }
 })
 
-routes.post('/', async (req: Request, res: Response) => {
+routes.put('/:expenseId', async (req: Request, res: Response) => {
+  const { expenseId } = req.params
   const expenseBody: ExpenseBody = req.body
-  const args = getExpenseArgs(expenseBody)
 
   try {
-    console.log('Creating expense...')
-
-    const expenseCreateArgs: Prisma.ExpenseCreateArgs = {
-      data: args,
-    }
-
-    await prisma.expense.create(expenseCreateArgs)
-    console.log('Successfully created expense.')
-
+    await expenseController.updateOne(expenseId, expenseBody)
     res.sendStatus(200)
   } catch (err) {
     console.error(err)
@@ -127,16 +59,7 @@ routes.delete('/:expenseId', async (req: Request, res: Response) => {
   const { expenseId } = req.params
 
   try {
-    console.log('Deleting expense...')
-
-    await prisma.expense.delete({
-      where: {
-        id: expenseId,
-      },
-    })
-
-    console.log('Successfully deleted expense.')
-
+    await expenseController.deleteOne(expenseId)
     res.sendStatus(200)
   } catch (err) {
     console.error(err)
