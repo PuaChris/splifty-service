@@ -19,14 +19,14 @@ export const USERS_SEED_UPSERT_ARGS = [
     data: {
       firstName: 'Joshua',
       lastName: 'Cai',
-      email: null,
+      email: '',
     },
   },
   {
     data: {
       firstName: 'Ting Feng',
       lastName: 'Gao',
-      email: null,
+      email: '',
     },
   },
 ]
@@ -37,7 +37,7 @@ export const EXPENSES_SEED_UPSERT_ARGS = [
       title: 'Enim facilisis gravida neque convallis',
       cost: new Prisma.Decimal(Math.random() * 100).toFixed(2),
       ownerId: 1,
-      splitMethod: SplitMethod.Amount
+      splitMethod: SplitMethod.Amount,
     },
   },
   {
@@ -45,7 +45,7 @@ export const EXPENSES_SEED_UPSERT_ARGS = [
       title: 'Commodo viverra maecenas accumsan lacus',
       cost: new Prisma.Decimal(Math.random() * 100).toFixed(2),
       ownerId: 2,
-      splitMethod: SplitMethod.Amount
+      splitMethod: SplitMethod.Amount,
     },
   },
   {
@@ -53,7 +53,7 @@ export const EXPENSES_SEED_UPSERT_ARGS = [
       title: 'Egestas dui id ornare arcu',
       cost: new Prisma.Decimal(Math.random() * 100).toFixed(2),
       ownerId: 3,
-      splitMethod: SplitMethod.Amount
+      splitMethod: SplitMethod.Amount,
     },
   },
   {
@@ -61,7 +61,7 @@ export const EXPENSES_SEED_UPSERT_ARGS = [
       title: 'Eu consequat ac felis donec',
       cost: new Prisma.Decimal(Math.random() * 100).toFixed(2),
       ownerId: 4,
-      splitMethod: SplitMethod.Amount
+      splitMethod: SplitMethod.Amount,
     },
   },
 ]

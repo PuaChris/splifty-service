@@ -62,7 +62,7 @@ model Groups {
 }
 
 enum SplitMethod {
-  Equally
+  Equal
   Amount
   Percent
 }
