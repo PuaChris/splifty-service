@@ -24,6 +24,7 @@ export const expenseController: ExpenseController = {
 async function fetchMany(): Promise<ExpenseBody[]> {
   console.log('Fetching expenses...')
   const expenses = await prisma.expense.findMany({
+    orderBy: [{ date: 'desc' }],
     select: EXPENSE_SELECT,
   })
 
