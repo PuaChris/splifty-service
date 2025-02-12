@@ -9,7 +9,7 @@ interface ExpenseController {
   fetchMany: () => Promise<ExpenseBody[]>
   fetchOne: (id: string) => Promise<ExpenseBody | null>
   createOne: (expense: ExpenseBody) => Promise<void>
-  updateOne: (id: string, expense: ExpenseBody) => Promise<void>
+  updateOne: (id: string, expense: ExpenseBody) => Promise<number>
   deleteOne: (id: string) => Promise<void>
 }
 
@@ -84,9 +84,9 @@ async function fetchOne(id: string): Promise<ExpenseBody | null> {
 async function createOne(expense: ExpenseBody) {
   console.log('Creating expense...')
 
-  const args = getExpenseArgs(expense)
+  const { expenseArgs } = getExpenseArgs(expense)
   const expenseCreateArgs: Prisma.ExpenseCreateArgs = {
-    data: args,
+    data: expenseArgs,
   }
   await prisma.expense.create(expenseCreateArgs)
 
@@ -95,18 +95,36 @@ async function createOne(expense: ExpenseBody) {
 
 async function updateOne(id: string, expense: ExpenseBody) {
   console.log('Updating expense...')
+  try {
+    const { expenseArgs, partyArgs } = getExpenseArgs(expense)
+    const expenseUpdateArgs: Prisma.ExpenseUpdateArgs = {
+      where: {
+        id,
+      },
+      data: expenseArgs,
+    }
 
-  const args = getExpenseArgs(expense)
-  const expenseUpdateArgs: Prisma.ExpenseUpdateArgs = {
-    where: {
-      id,
-    },
-    data: args,
+    await prisma.$transaction(async (tx) => {
+      await tx.expense.update(expenseUpdateArgs)
+
+      for (const party of partyArgs) {
+        const partyUpdateArgs: Prisma.PartyUpdateArgs = {
+          where: {
+            id: party.id,
+          },
+          data: party,
+        }
+
+        await tx.party.update(partyUpdateArgs)
+      }
+    })
+
+    console.log('Successfully updated expense.')
+    return 200
+  } catch (err) {
+    console.error(err)
+    return 500
   }
-
-  await prisma.expense.update(expenseUpdateArgs)
-
-  console.log('Successfully updated expense.')
 }
 
 async function deleteOne(id: string) {

@@ -46,13 +46,8 @@ routes.put('/:expenseId', async (req: Request, res: Response) => {
   const { expenseId } = req.params
   const expenseBody: ExpenseBody = req.body
 
-  try {
-    await expenseController.updateOne(expenseId, expenseBody)
-    res.sendStatus(200)
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(400)
-  }
+  const status = await expenseController.updateOne(expenseId, expenseBody)
+  res.sendStatus(status)
 })
 
 routes.delete('/:expenseId', async (req: Request, res: Response) => {

@@ -41,8 +41,8 @@ model Expense {
 
 model Party {
   id         String     @id @default(uuid())
-  percent    Decimal
   amountOwed Decimal
+  percent    Decimal
   settled    Boolean
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
